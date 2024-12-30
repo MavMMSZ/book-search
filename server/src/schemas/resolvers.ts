@@ -1,5 +1,5 @@
-import Book, { IBook } from '../models/book';
-import User, { IUser } from '../models/user';
+import Book, { IBook } from '../models/Book';
+import User, { IUser } from '../models/User';
 
 const resolvers = {
     Query: {
@@ -29,3 +29,6 @@ const resolvers = {
             return updatedUser;
         },
     },
+};
+
+export default resolvers;

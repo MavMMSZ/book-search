@@ -39,4 +39,6 @@ const typeDefs = `
         ): User
         removeBook(bookId: String!): User
     }
-    `;
+`;
+
+export default typeDefs;
