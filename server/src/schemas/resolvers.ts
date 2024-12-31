@@ -28,6 +28,15 @@ const resolvers = {
             );
             return updatedUser;
         },
+        deleteBook: async (_parent: any, { _id, bookId }: { _id: string, bookId: string }): Promise<IUser | null> => {
+            const updatedUser = await User.findOneAndUpdate( 
+                { _id },
+                { $pull: { savedBooks: bookId } },
+                { new: true }
+            );
+            return updatedUser;
+        }
+        
     },
 };
 
