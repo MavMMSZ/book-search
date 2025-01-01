@@ -1,6 +1,6 @@
 const typeDefs = `
     type Book {
-        _id: ID
+        _id: ID!
         authors: [String]
         description: String
         bookId: String
@@ -10,7 +10,7 @@ const typeDefs = `
     }
     
     type User {
-        _id: ID
+        _id: ID!
         username: String
         email: String
         bookCount: Int
@@ -24,6 +24,10 @@ const typeDefs = `
     
     type Query {
         me: User
+        books: [Book]
+        book(bookId: String!): Book
+        users: [User]
+        user(username: String!): User
     }
     
     type Mutation {
