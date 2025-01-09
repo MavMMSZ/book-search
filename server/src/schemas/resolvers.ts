@@ -1,4 +1,3 @@
-
 import  User  from '../models/User.js'; // Import Mongoose User model
 import { AuthenticationError } from 'apollo-server-express'; // For handling auth errors
 import { signToken } from '../services/auth.js'; // Use your existing auth utility
@@ -23,13 +22,11 @@ export const resolvers = {
   },
   
   Mutation: {
-    // // Register a new user
-    // register: async (_parent: any, { username, email, password }: { username: string; email: string; password: string }) => {
-    //   const newUser = await User.create({ username, email, password });
-    //   const token = signToken(newUser.username, newUser.email, String(newUser._id));
-    //   return { token, user: newUser };
-    // },
-    // Login an existing user
+    addUser: async (_parent: any, { username, email, password }: { username: string; email: string; password: string }) => {
+      const newUser = await User.create({ username, email, password });
+      const token = signToken(newUser.username, newUser.email, String(newUser._id));
+      return { token, user: newUser };
+    },
     login: async (_parent: any, { email, password }: { email: string; password: string }) => {
       const user = await User.findOne({ email });
       if (!user) {
@@ -42,14 +39,6 @@ export const resolvers = {
       const token = signToken(user.username, user.email, String(user._id));
       return { token, user };
     },
-    // Update a user's profile
-    // updateUser: async (_parent: any, { id, username, email }: { id: string; username?: string; email?: string }) => {
-    //   return await User.findByIdAndUpdate(id, { username, email }, { new: true });
-    // },
-    // // Delete a user
-    // deleteUser: async (_parent: any, { id }: { id: string }) => {
-    //   return await User.findByIdAndDelete(id);
-    // },
     saveBook: async (_parent: any, { input }: { input: any }, context: any) => {
       if (!context.user) {
         throw new AuthenticationError('You must be logged in');

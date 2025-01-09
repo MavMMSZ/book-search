@@ -16,6 +16,8 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
+  
+  const [createUser] = useMutation(ADD_USER);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -32,16 +34,17 @@ const SignupForm = ({}: { handleModalClose: () => void }) => {
       event.stopPropagation();
     }
 
-    const [createUser] = useMutation(ADD_USER);
-   
     try {
-      const data = await createUser();
+      const { data } = await createUser({
+        variables: {...userFormData}
+      });
+      console.log(data);
 
       if (!data) {
         throw new Error('something went wrong!');
       }
 
-      const { token } = data.data.addUser;// await response.json();
+      const { token } = data.addUser;
       Auth.login(token);
     } catch (err) {
       console.error(err);
