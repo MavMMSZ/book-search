@@ -4,18 +4,9 @@ import { signToken } from '../services/auth.js'; // Use your existing auth utili
 
 export const resolvers = {
   Query: {
-    // // Fetch all users
-    // users: async () => {
-    //   return await User.find({});
-    // },
-    // // Fetch a single user by ID
-    // user: async (_parent: any, { id }: { id: string }) => {
-    //   return await User.findById(id);
-    // },
-    // // Get the logged-in user's details
     me: async (_parent: any, _args: any, context: any) => {
       if (!context.user) {
-        throw new AuthenticationError('You must be logged in');
+        throw new AuthenticationError('You must be logged in....me issue');
       }
       return await User.findById(String(context.user._id));
     },
@@ -41,7 +32,7 @@ export const resolvers = {
     },
     saveBook: async (_parent: any, { input }: { input: any }, context: any) => {
       if (!context.user) {
-        throw new AuthenticationError('You must be logged in');
+        throw new AuthenticationError('You must be logged in....savbook issue');
       }
       return await User.findByIdAndUpdate(
         context.user._id,
@@ -51,7 +42,7 @@ export const resolvers = {
     },
     removeBook: async (_parent: any, { bookId }: { bookId: string }, context: any) => {
       if (!context.user) {
-        throw new AuthenticationError('You must be logged in');
+        throw new AuthenticationError('You must be logged in....remove issue');
       }
       return await User.findByIdAndUpdate(
         context.user._id,

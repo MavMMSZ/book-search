@@ -27,7 +27,7 @@ const typeDefs = `
         link: String
     }
 
-      input BookInput {
+    input BookInput {
         authors: [String]
         description: String
         title: String
