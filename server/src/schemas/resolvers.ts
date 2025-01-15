@@ -32,23 +32,51 @@ export const resolvers = {
     },
     saveBook: async (_parent: any, { input }: { input: any }, context: any) => {
       if (!context.user) {
-        throw new AuthenticationError('You must be logged in....savbook issue');
+        throw new AuthenticationError('You must be logged in to save a book.');
       }
-      return await User.findByIdAndUpdate(
-        context.user._id,
-        { $addToSet: { savedBooks: input } },
-        { new: true }
-      );
+    
+      try {
+        console.log("Context User:", context.user);
+        console.log("Input:", input);
+    
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $addToSet: { savedBooks: input } }, // Prevents duplicate entries
+          { new: true } // Returns the updated document
+        );
+    
+        if (!updatedUser) {
+          throw new Error("User not found.");
+        }
+    
+        return updatedUser;
+      } catch (error) {
+        console.error("Error saving book:");
+        throw new Error("Failed to save the book.");
+      }
     },
+    
     removeBook: async (_parent: any, { bookId }: { bookId: string }, context: any) => {
       if (!context.user) {
-        throw new AuthenticationError('You must be logged in....remove issue');
+        throw new AuthenticationError('You must be logged in to remove a book.');
       }
-      return await User.findByIdAndUpdate(
-        context.user._id,
-        { $pull: { savedBooks: { bookId } } },
-        { new: true }
-      );
+    
+      try {
+        const updatedUser = await User.findByIdAndUpdate(
+          context.user._id,
+          { $pull: { savedBooks: { bookId } } },
+          { new: true }
+        );
+    
+        if (!updatedUser) {
+          throw new Error("User not found.");
+        }
+    
+        return updatedUser;
+      } catch (error) {
+        console.error("Error removing book:");
+        throw new Error("Failed to remove the book.");
+      }
     }
   },
 };

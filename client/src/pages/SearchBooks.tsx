@@ -22,11 +22,11 @@ const SearchBooks = () => {
   const [searchInput, setSearchInput] = useState('');
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
   const [saveBook] = useMutation(SAVE_BOOK, {
-    // context: {
-    //   headers: {
-    //     authorization: Auth.getToken() ? `Bearer ${Auth.getToken()}` : '',
-    //   },
-    // }
+    context: {
+      headers: {
+        authorization: Auth.getToken() ? `Bearer ${Auth.getToken()}` : '',
+      },
+    }
   });
 
   useEffect(() => {
@@ -65,33 +65,31 @@ const SearchBooks = () => {
   };
 
   const handleSaveBook = async (bookId: string) => {
-    const bookToSave: Book = searchedBooks.find((book) => book.bookId === bookId)!;
-
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
-    console.log('token:', token);
-  if (!token) {
-    console.error('No token found. User must be logged in.');
-    return false;
-  }
-
-  try {
-    const { data } = await saveBook({
-      variables: { input: bookToSave },
-      context: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    });
-
-    if (!data) {
-      throw new Error('Save book mutation failed with no response data.');
+    const token = Auth.getToken();
+    if (!token) {
+      return false;
     }
 
-    setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-  } catch (err) {
-    console.error(err);
-  }
+    const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
+
+    if (!bookToSave) {
+      return false;
+    }
+
+    try {
+      await saveBook({
+        variables: { input: bookToSave },
+      });
+
+      setSavedBookIds([...savedBookIds, bookId]);
+    } catch (err) {
+      console.error(err);
+    }
+
+    const updatedSavedBookIds = getSavedBookIds();
+    setSavedBookIds(updatedSavedBookIds);
+
+    return true;
 };
 
   return (
